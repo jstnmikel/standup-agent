@@ -1,0 +1,17 @@
+{
+  "name": "agent-mcp-lab",
+  "version": "1.0.0",
+  "description": "Daily Standup Summarizer agent — reads open GitHub issues via the GitHub MCP server and produces a plain-English summary.",
+  "type": "module",
+  "main": "src/agent.js",
+  "scripts": {
+    "test": "vitest --run"
+  },
+  "dependencies": {
+    "dotenv": "16.4.5"
+  },
+  "devDependencies": {
+    "fast-check": "3.22.0",
+    "vitest": "2.1.9"
+  }
+}

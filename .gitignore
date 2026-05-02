@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER commit this file
+.env
+
+# Build output
+dist/
+
+# Test coverage
+coverage/

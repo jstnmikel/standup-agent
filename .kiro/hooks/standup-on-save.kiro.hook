@@ -1,0 +1,13 @@
+{
+  "name": "Standup Summarizer on Save",
+  "version": "1.0.0",
+  "description": "Runs the standup-summarizer agent whenever a file is saved, and shows the summary of open GitHub issues in the Kiro chat panel.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["**/*"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Run the standup-summarizer agent: read all open issues from the GitHub repository configured in the .env file (GITHUB_OWNER and GITHUB_REPO) using the GitHub MCP server, then show a plain-English numbered summary of what needs attention today."
+  }
+}
