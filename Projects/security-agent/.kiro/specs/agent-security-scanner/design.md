@@ -105,7 +105,7 @@ sequenceDiagram
 
 ### ScanOrchestrator
 
-The central coordinator. Reads config, resolves which tool runners to activate, launches them in parallel via `Promise.all`, collects results, and drives the progress reporter.
+The central coordinator. Reads config, resolves which tool runners to activate, launches them in parallel via `Promise.allSettled`, collects results, and drives the progress reporter.
 
 ```typescript
 interface ScanContext {
@@ -629,7 +629,7 @@ scanner/                         # extension + CLI source root
 
 ## Tool Orchestration: Parallel Execution Design
 
-All enabled tool runners are launched concurrently using `Promise.all`. Each runner spawns its tool as a child process via `ProcessSpawner`, which wraps Node.js `child_process.spawn` with:
+All enabled tool runners are launched concurrently using `Promise.allSettled`. Each runner spawns its tool as a child process via `ProcessSpawner`, which wraps Node.js `child_process.spawn` with:
 
 - A configurable timeout (default: 120 s per tool for full scans, 25 s for pre-commit scans)
 - Streaming stdout/stderr capture (buffered, not blocking)

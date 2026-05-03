@@ -25,7 +25,7 @@
   - [ ] 3.2 Implement AdminPolicyLoader that reads and validates admin-policy.json (config/AdminPolicyLoader.ts)
   - [ ] 3.3 Implement three-layer config merge: built-in defaults → admin policy → developer-local
   - [ ] 3.4 Implement override tracking so the scanner can notify developers when admin policy overrides local settings
-  - [ ] 3.5 Implement ProxyConfig reader that checks scanner config and Windows HTTPS_PROXY/HTTP_PROXY env vars
+  - [ ] 3.5 Implement ProxyConfig utility that checks scanner config and Windows HTTPS_PROXY/HTTP_PROXY env vars (utils/ProxyConfig.ts)
   - [ ] 3.6 Write unit tests for config merging, including property test: admin policy values always win over developer-local values for the same key
 
 - [ ] 4. Credential Redactor (shared utility — must be built before loggers)
@@ -79,12 +79,13 @@
   - [ ] 9.5 Write property-based test: for any finding list and suppression list, every finding matching a suppression appears in suppressed list and not in active list
 
 - [ ] 10. Scan Orchestrator
-  - [ ] 10.1 Implement ScanOrchestrator that reads config, resolves enabled tool runners, and launches them concurrently via Promise.allSettled (orchestrator/ScanOrchestrator.ts)
-  - [ ] 10.2 Implement pre-commit scope restriction: pass staged files list to Semgrep/Gitleaks; always pass full manifests to Trivy/npm audit/pip-audit
-  - [ ] 10.3 Implement tool failure isolation: log scan_tool_error audit event on failure, continue scan with remaining tools
-  - [ ] 10.4 Implement ProgressReporter that emits phase updates to StatusBarReporter (IDE) and stdout (CLI) (orchestrator/ProgressReporter.ts)
-  - [ ] 10.5 Implement estimated completion time display for scans expected to exceed 30 seconds
-  - [ ] 10.6 Implement scan cancellation support
+  - [ ] 10.1 Implement ScanContext interface and ScanCategory types (orchestrator/ScanContext.ts)
+  - [ ] 10.2 Implement ScanOrchestrator that reads config, resolves enabled tool runners, and launches them concurrently via Promise.allSettled — NOT Promise.all, so one tool failure does not abort others (orchestrator/ScanOrchestrator.ts)
+  - [ ] 10.3 Implement pre-commit scope restriction: pass staged files list to Semgrep/Gitleaks; always pass full manifests to Trivy/npm audit/pip-audit
+  - [ ] 10.4 Implement tool failure isolation: log scan_tool_error audit event on failure, continue scan with remaining tools
+  - [ ] 10.5 Implement ProgressReporter that emits phase updates to StatusBarReporter (IDE) and stdout (CLI) (orchestrator/ProgressReporter.ts)
+  - [ ] 10.6 Implement estimated completion time display for scans expected to exceed 30 seconds
+  - [ ] 10.7 Implement scan cancellation support
 
 - [ ] 11. Report Builder and Scan History
   - [ ] 11.1 Implement ReportBuilder: assembles ScanReport from filtered findings, attaches rule manifest, computes trend delta from prior history (report/ReportBuilder.ts)
@@ -121,9 +122,9 @@
   - [ ] 14.4 Implement JSON output mode (--output-json flag)
 
 - [ ] 15. Pre-commit Hook
-  - [ ] 15.1 Implement PreCommitHookInstaller: writes .git/hooks/pre-commit PowerShell script that calls scanner scan --pre-commit (setup/PreCommitHookInstaller.ts)
-  - [ ] 15.2 Hook script exits with code 0 (allow) or 1 (block) based on scan result
-  - [ ] 15.3 Implement --no-verify bypass detection: log commit_scan_bypassed audit event on next scan when hook was skipped
+  - [ ] 15.1 Create pre-commit hook PowerShell template at templates/pre-commit.ps1 that calls scanner scan --pre-commit --staged-files with the list of staged files from git diff --cached --name-only
+  - [ ] 15.2 Implement PreCommitHookInstaller: copies template to .git/hooks/pre-commit and makes it executable (setup/PreCommitHookInstaller.ts)
+  - [ ] 15.3 Hook script exits with code 0 (allow) or 1 (block) based on scan result; hook script itself logs commit_scan_bypassed to audit log when --no-verify is detected via git environment variable GIT_NO_VERIFY or absence of hook invocation
   - [ ] 15.4 Write integration test: invoke hook against staged fixture file with Critical finding; assert exit code 1
 
 - [ ] 16. Setup Manager
