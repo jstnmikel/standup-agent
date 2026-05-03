@@ -1,5 +1,40 @@
 ﻿# Requirements Document
 
+## Current Build Alignment (May 3, 2026)
+
+The current build implements the scanner as a Windows CLI executable (`scanner/dist/scanner.exe`), a Node/TypeScript CLI source build, and a Kiro/VS Code-compatible extension bundle. The executable supports the same commands as the CLI:
+
+```powershell
+scanner.exe setup --workspace .
+scanner.exe setup --check-only --no-hook --workspace .
+scanner.exe scan --workspace .
+scanner.exe scan --pre-commit --staged-files <files>
+scanner.exe update-rules --workspace .
+scanner.exe audit-log --verify --workspace .
+scanner.exe scan-history --workspace .
+```
+
+Implemented behavior:
+
+- Setup installs missing tools by default using `winget` and `python -m pip --user`, with `--check-only` for inventory-only runs.
+- Setup enforces minimum tool versions where command output exposes a parseable semantic version.
+- Scans run external tools in isolated `Promise.allSettled` slots and continue when tools are unavailable or fail.
+- Scan reports include a `warnings` array for missing/failing tools, and audit logs record `scan_tool_error`.
+- Audit logs are JSON Lines with SHA-256 hash chaining and credential redaction.
+- `update-rules` writes the current built-in Semgrep rules to `.kiro/security/custom-rules/agent-security-scanner.yml`.
+- The Semgrep runner loads the generated custom rule pack when present.
+- MCP config allowlist behavior is implemented for remote URLs in `mcp.json`, `mcp.config.json`, and `mcp-settings.json`.
+- IDE diagnostics, output reporting, status bar reporting, and suppress quick-fix plumbing are implemented.
+
+Known gaps against the aspirational requirements:
+
+- Official release-manifest binary downloads with mandatory checksum verification are not yet the default setup path.
+- `self-update` does not yet download and atomically replace `scanner.exe`.
+- Built-in Semgrep rules are starter rules and do not yet represent the complete OWASP/STRIDE/MCP/Windows Credential Manager rule corpus described below.
+- Log forwarding and full retry semantics are not implemented.
+- Exact staged-content scanning for Gitleaks remains broader than the staged file list.
+- Full MCP package provenance, local package dependency inspection, and malicious MCP behavior analysis remain future work.
+
 ## Introduction
 
 The Agent Security Scanner is a developer-facing security tool that integrates into the Kiro IDE and local Git workflows on Windows workstations. It enables developers who are experimenting with AI agents, MCPs (Model Context Protocols), and Kiro to continue building freely while automatically detecting common security vulnerabilities in their code, dependencies, and configuration files. The scanner runs open-source tools locally, covering OWASP Top 10, CWE Top 25, OWASP LLM Top 10, OWASP Agentic Top 10 (ASI01-ASI10), STRIDE threat patterns, supply chain integrity, credential and secret detection, MCP security, and AI transparency and observability patterns. It can be triggered manually by the developer or automatically on Git pre-commit events, with centralized admin policy management for team deployments.

@@ -1,5 +1,40 @@
 # Design Document: Agent Security Scanner
 
+## Current Build Notes (May 3, 2026)
+
+The current implementation is delivered as both a TypeScript CLI/Kiro extension source tree and a packaged Windows executable at `scanner/dist/scanner.exe`. The executable wraps the CLI entry point and can be run directly on Windows without invoking `node`.
+
+Supported executable examples:
+
+```powershell
+scanner.exe --version
+scanner.exe setup --workspace .
+scanner.exe setup --check-only --no-hook --workspace .
+scanner.exe update-rules --workspace .
+scanner.exe scan --workspace .
+scanner.exe audit-log --verify --workspace .
+scanner.exe scan-history --workspace .
+```
+
+The setup flow now attempts to install missing scanner tools by default. It uses Windows-friendly package-manager strategies rather than bundled official binary downloads:
+
+- Semgrep: `python -m pip install --user semgrep`, then `py -m pip install --user semgrep` fallback
+- Gitleaks: `winget install --exact --id Gitleaks.Gitleaks`
+- Trivy: `winget install --exact --id AquaSecurity.Trivy`
+- npm audit / Node.js: `winget install --exact --id OpenJS.NodeJS.LTS`
+- pip-audit: `python -m pip install --user pip-audit`, then `py -m pip install --user pip-audit` fallback
+- detect-secrets: `python -m pip install --user detect-secrets`, then `py -m pip install --user detect-secrets` fallback
+
+`setup --check-only` inventories tool availability without installing. Setup enforces minimum version parsing and exits non-zero if any required tool is unavailable or below its minimum version.
+
+The current build includes checksum and HTTPS download utility classes, but setup does not yet use official release manifests and standalone checksum-verified binary downloads by default. Self-update is a placeholder for local builds and does not yet download or replace the scanner executable.
+
+Scan reports now include a `warnings` array for unavailable tools, non-zero scanner exits, or incomplete coverage. Missing external tools do not abort scans; they are logged to the audit log as `scan_tool_error` and surfaced in terminal/IDE output.
+
+`update-rules` currently writes a built-in Semgrep YAML rule pack to `.kiro/security/custom-rules/agent-security-scanner.yml`, records it in `rule-manifest.json`, and the Semgrep runner loads it alongside `--config auto` when present.
+
+MCP config scanning includes an internal scanner for `mcp.json`, `mcp.config.json`, and `mcp-settings.json` files. Remote MCP URLs that are not present in local/admin MCP allowlists produce informational findings. Full MCP package provenance/dependency inspection remains future work.
+
 ## Overview
 
 The Agent Security Scanner is a Windows-only security tool delivered as a Kiro IDE extension (VS Code-compatible) with a companion CLI. It orchestrates six open-source scanning tools — Semgrep, Gitleaks, Trivy, npm audit, pip-audit, and detect-secrets — as child processes, aggregates their JSON output into a unified finding model, and surfaces results through VS Code diagnostic APIs, a terminal report, and a tamper-evident audit log.

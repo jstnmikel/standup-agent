@@ -1,14 +1,31 @@
 ﻿# Implementation Plan: Agent Security Scanner
 
+## Current Build Summary (May 3, 2026)
+
+The scanner now builds and packages a Windows executable at `scanner/dist/scanner.exe` with:
+
+- CLI commands for `scan`, `setup`, `update-rules`, `self-update`, `audit-log`, `scan-history`, and `onboarding`
+- external tool runners and normalizers for Semgrep, Gitleaks, Trivy, npm audit, pip-audit, and detect-secrets
+- setup installation attempts for missing tools via `winget` and `python -m pip --user`
+- minimum version parsing/enforcement in setup
+- scan report warnings for missing/failing tools
+- tamper-evident audit logs and credential redaction
+- scan history, suppressions, admin policy loading, MCP allowlist scanning, and Kiro/VS Code diagnostics
+- generated built-in Semgrep rules via `update-rules`
+- packaging command `npm run package:exe`
+- verified zero npm audit vulnerabilities after updating `esbuild`
+
+Remaining high-level work: official checksum-verified standalone binary downloads in setup, real self-update, richer Semgrep rule corpus, log forwarding, exact staged-content secret scanning, deeper MCP package provenance/dependency scanning, and broader integration tests with real tools installed.
+
 ## Tasks
 
 - [ ] 1. Project Scaffolding and Setup
-  - [ ] 1.1 Initialize TypeScript project with package.json, tsconfig.json, and VS Code extension manifest (package.json with contributes.commands, activationEvents)
-  - [ ] 1.2 Set up build toolchain (esbuild or webpack for extension bundling, tsc for type checking)
-  - [ ] 1.3 Create CLI entry point using commander.js with subcommands: scan, setup, update-rules, self-update, audit-log, scan-history, onboarding
-  - [ ] 1.4 Create VS Code extension entry point (extension.ts) with activate/deactivate lifecycle
-  - [ ] 1.5 Set up fast-check for property-based testing and Jest for unit/integration tests
-  - [ ] 1.6 Create the full source directory structure as defined in design.md
+  - [x] 1.1 Initialize TypeScript project with package.json, tsconfig.json, and VS Code extension manifest (package.json with contributes.commands, activationEvents)
+  - [x] 1.2 Set up build toolchain (esbuild or webpack for extension bundling, tsc for type checking)
+  - [x] 1.3 Create CLI entry point using commander.js with subcommands: scan, setup, update-rules, self-update, audit-log, scan-history, onboarding
+  - [x] 1.4 Create VS Code extension entry point (extension.ts) with activate/deactivate lifecycle
+  - [x] 1.5 Set up fast-check for property-based testing and Jest for unit/integration tests
+  - [x] 1.6 Create the full source directory structure as defined in design.md
 
 - [ ] 2. Core Data Models
   - [ ] 2.1 Implement Finding interface and FindingCategory/Severity types (models/Finding.ts)
