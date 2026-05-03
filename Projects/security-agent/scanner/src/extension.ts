@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('agentSecurityScanner.runScan', async () => runIdeScan('manual')),
     vscode.commands.registerCommand('agentSecurityScanner.runHistoryScan', async () => runIdeScan('history')),
-    vscode.commands.registerCommand('agentSecurityScanner.updateRules', async () => {
+    vscode.commands.registerCommand('agentSecurityScanner.updateRules', () => {
       outputChannel.show();
       outputChannel.appendLine('Rule updates are not yet implemented; current local rules remain active.');
     }),
@@ -37,11 +37,11 @@ export function activate(context: vscode.ExtensionContext): void {
       const events = await new AuditLogger(path.resolve(workspaceRoot, '.kiro/security/audit.log')).read();
       events.slice(-50).forEach((event) => outputChannel.appendLine(JSON.stringify(event)));
     }),
-    vscode.commands.registerCommand('agentSecurityScanner.onboarding', async () => {
+    vscode.commands.registerCommand('agentSecurityScanner.onboarding', () => {
       outputChannel.show();
       outputChannel.appendLine('Run Agent Security Scanner: Run Scan to create the first local report and audit log.');
     }),
-    vscode.commands.registerCommand('agentSecurityScanner.selfUpdate', async () => {
+    vscode.commands.registerCommand('agentSecurityScanner.selfUpdate', () => {
       outputChannel.show();
       outputChannel.appendLine('Self-update is not yet implemented; install newer extension builds through your normal deployment channel.');
     }),

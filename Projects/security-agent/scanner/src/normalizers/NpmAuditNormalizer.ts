@@ -9,7 +9,8 @@ export class NpmAuditNormalizer implements FindingNormalizer {
     const vulnerabilities = asRecord(root.vulnerabilities);
     return Object.entries(vulnerabilities).map(([name, value]) => {
       const vuln = asRecord(value);
-      const via = Array.isArray(vuln.via) ? vuln.via[0] : undefined;
+      const viaValues: unknown[] = Array.isArray(vuln.via) ? vuln.via : [];
+      const via = viaValues[0];
       const viaRecord = asRecord(via);
       const advisoryId = viaRecord.source ?? viaRecord.url ?? name;
       return finding(

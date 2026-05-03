@@ -8,7 +8,7 @@ export interface UpdateCheckResult {
 }
 
 export class SelfUpdateManager {
-  async checkForUpdate(): Promise<UpdateCheckResult> {
+  checkForUpdate(): UpdateCheckResult {
     return {
       updateAvailable: false,
       currentVersion: '0.1.0',
@@ -17,7 +17,7 @@ export class SelfUpdateManager {
   }
 
   async applyUpdate(workspaceRoot: string): Promise<UpdateCheckResult> {
-    const result = await this.checkForUpdate();
+    const result = this.checkForUpdate();
     await new AuditLogger(path.resolve(workspaceRoot, '.kiro/security/audit.log')).log({
       event_type: result.updateAvailable ? 'self_update_completed' : 'self_update_failed',
       previous_version: result.currentVersion,

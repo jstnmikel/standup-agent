@@ -15,7 +15,7 @@ const DEFAULT_PATTERNS: CredentialPattern[] = [
   { type: 'GITHUB-TOKEN', regex: /\bgh[pousr]_[A-Za-z0-9_]{36,255}\b/g },
   { type: 'OPENAI-API-KEY', regex: /\bsk-[A-Za-z0-9_-]{20,}\b/g },
   { type: 'PASSWORD', regex: /\b(password|passwd|pwd)\s*[:=]\s*["']?[^"'\s,;]{8,}/gi },
-  { type: 'API-KEY', regex: /\b(api[_-]?key|token|secret)\s*[:=]\s*["']?[A-Za-z0-9._\-]{16,}/gi },
+  { type: 'API-KEY', regex: /\b(api[_-]?key|token|secret)\s*[:=]\s*["']?[A-Za-z0-9._-]{16,}/gi },
   { type: 'JWT', regex: /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g }
 ];
 
