@@ -1,21 +1,47 @@
 # Admin Deployment
 
-Administrators can distribute the extension/CLI bundle, the packaged Windows executable at `dist\scanner.exe`, and an `admin-policy.json` file.
+Administrators can distribute:
 
-Build and package:
+- `dist\scanner.exe`
+- the Kiro/VS Code extension bundle
+- an optional `.kiro/security/admin-policy.json`
+
+## Build Artifact
 
 ```powershell
 npm install
+npm run typecheck
+npm test -- --runInBand
+npm run lint
+npm audit
 npm run package:exe
 ```
 
-Deploy `dist\scanner.exe` to a managed location and run setup per repository:
+The Windows executable is created at:
+
+```text
+dist\scanner.exe
+```
+
+## Provision A Repository
+
+Install missing scanner tools and the pre-commit hook:
 
 ```powershell
 scanner.exe setup --silent --workspace C:\path\to\repo
 ```
 
-Recommended baseline:
+Inventory only:
+
+```powershell
+scanner.exe setup --check-only --silent --no-hook --workspace C:\path\to\repo
+```
+
+Current setup uses `winget` and `python -m pip --user`. It does not yet use official standalone binary release manifests by default.
+
+## Recommended Admin Policy
+
+Place this at `.kiro/security/admin-policy.json` or configure `adminPolicyPath`.
 
 ```json
 {
@@ -30,12 +56,33 @@ Recommended baseline:
     "pip-audit": "2.6.0",
     "detect-secrets": "1.4.0"
   },
+  "enabledCategories": [
+    "owasp-top10",
+    "cwe-top25",
+    "owasp-llm-top10",
+    "owasp-agentic-top10",
+    "stride",
+    "credentials",
+    "dependencies",
+    "mcp-config",
+    "mcp-malicious-code",
+    "supply-chain",
+    "git-history",
+    "agent-attack-patterns",
+    "ai-transparency",
+    "kiro-agent-files",
+    "windows-credential-manager"
+  ],
   "allowLocalSuppressions": true
 }
 ```
 
-Use `scanner setup --silent --workspace <repo>` or `scanner.exe setup --silent --workspace <repo>` during provisioning to install missing scanner tools and the pre-commit hook.
+## Network Behavior
 
-Use `scanner setup --check-only --silent --workspace <repo>` or `scanner.exe setup --check-only --silent --no-hook --workspace <repo>` to inventory tool availability without changing the machine.
+The scanner itself does not forward code or findings by default. External tools may use their own advisory or rule sources, depending on tool configuration and cache state.
 
-Current setup uses `winget` and `python -m pip --user` installers. It does not yet perform official standalone binary downloads from release manifests by default, although checksum/download utility classes exist in the codebase.
+Current not-yet-implemented admin features:
+
+- webhook/file log forwarding with retry
+- real scanner self-update from a hosted release manifest
+- default checksum-verified standalone tool downloads

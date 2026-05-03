@@ -2,39 +2,61 @@
 
 ## Tool Missing
 
-Run:
+Run setup:
 
 ```powershell
-scanner setup --workspace .
 dist\scanner.exe setup --workspace .
 ```
 
-Setup attempts to install missing tools with `winget` or `python -m pip install --user`. If a tool installs but is still reported missing, restart the terminal so PATH changes take effect.
-
-Inventory without installing:
+If you only want to inspect the machine:
 
 ```powershell
 dist\scanner.exe setup --check-only --no-hook --workspace .
 ```
 
-In check-only mode, exit code `1` means one or more required tools are missing or below minimum version.
+Setup attempts to install missing tools with `winget` or `python -m pip install --user`. If setup says a tool installed but the tool is still missing, restart the terminal so PATH changes take effect.
+
+## Tool Version Too Old
+
+Setup parses command output and compares it with minimum versions. Update the tool manually or rerun setup.
+
+## Scan Has Warnings
+
+Warnings mean some scanner coverage may be missing. Common causes:
+
+- a tool is not installed
+- a tool is below minimum version
+- a tool exited non-zero
+- a tool produced invalid JSON
+
+The audit log also records `scan_tool_error`.
 
 ## Audit Log Verification Fails
 
-`scanner audit-log --verify` reports the first invalid line. Treat the log as tampered or corrupted from that line onward.
-
-The executable form is equivalent:
+Run:
 
 ```powershell
 dist\scanner.exe audit-log --verify --workspace .
 ```
 
+If verification fails, treat the log as tampered or corrupted from the first invalid line onward.
+
 ## Proxy Issues
 
-Set `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY`, or configure the `proxy` object in `.kiro/security/scanner-config.json`.
+Set environment variables:
+
+```powershell
+$env:HTTPS_PROXY = "http://proxy.example.com:8080"
+$env:HTTP_PROXY = "http://proxy.example.com:8080"
+$env:NO_PROXY = "localhost,127.0.0.1"
+```
+
+Or configure `proxy` in `.kiro/security/scanner-config.json`.
 
 ## Reinstall Pre-Commit Hook
 
 ```powershell
-scanner setup --workspace .
+dist\scanner.exe setup --workspace .
 ```
+
+Use `--no-hook` when you do not want setup to touch Git hooks.

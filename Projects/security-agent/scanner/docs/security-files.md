@@ -1,6 +1,34 @@
 # Security Files
 
-## `.kiro/security/suppressions.json`
+Scanner state lives under `.kiro/security/` in each workspace.
+
+## `audit.log`
+
+JSON Lines audit log with SHA-256 hash chaining. Verify it with:
+
+```powershell
+dist\scanner.exe audit-log --verify --workspace .
+```
+
+## `last-scan-report.json`
+
+Most recent scan report. Reports include:
+
+- `summary`
+- `findings`
+- `suppressedFindings`
+- `warnings`
+- `staleRulesets`
+
+Warnings are used for missing tools, tool failures, or incomplete scanner coverage.
+
+## `scan-history/`
+
+Retained scan reports. The default retention limit is `10`.
+
+## `suppressions.json`
+
+Developer-local suppressions:
 
 ```json
 [
@@ -15,7 +43,25 @@
 ]
 ```
 
-## `.kiro/security/admin-policy.json`
+`ruleId`, `filePath`, and `justification` are required.
+
+## `mcp-allowlist.json`
+
+Allowlisted remote MCP URLs or identifiers:
+
+```json
+[
+  {
+    "urlOrIdentifier": "https://trusted.example.com/mcp",
+    "description": "Approved team MCP server",
+    "addedAt": "2026-05-03T00:00:00.000Z"
+  }
+]
+```
+
+The internal MCP scanner checks `mcp.json`, `mcp.config.json`, and `mcp-settings.json`. Remote URLs not present in the local or admin allowlist produce informational findings.
+
+## `admin-policy.json`
 
 ```json
 {
@@ -23,15 +69,21 @@
   "mcpAllowlistEntries": [],
   "suppressionBaseline": [],
   "minimumToolVersions": {},
-  "enabledCategories": ["credentials", "dependencies"],
+  "enabledCategories": ["credentials", "dependencies", "mcp-config"],
   "allowLocalSuppressions": true
 }
 ```
 
-## `.kiro/security/rule-manifest.json`
+## `rule-manifest.json`
 
 Records ruleset names, versions, source URLs, and update timestamps.
 
-## `.kiro/security/custom-rules/`
+## `custom-rules/`
 
-Place Semgrep YAML rule files here. `scanner update-rules` writes `agent-security-scanner.yml`, and the Semgrep runner loads it alongside `--config auto`.
+`dist\scanner.exe update-rules --workspace .` writes:
+
+```text
+.kiro/security/custom-rules/agent-security-scanner.yml
+```
+
+The Semgrep runner loads that file alongside `--config auto` when present.
