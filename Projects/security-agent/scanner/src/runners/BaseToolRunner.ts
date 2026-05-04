@@ -1,5 +1,6 @@
 import type { ScanContext } from '../orchestrator/ScanContext';
 import { ProcessSpawner } from '../utils/ProcessSpawner';
+import { PathAugmenter } from '../utils/PathAugmenter';
 import type { RawToolOutput, ToolRunner } from './ToolRunner';
 
 export abstract class BaseToolRunner implements ToolRunner {
@@ -14,14 +15,17 @@ export abstract class BaseToolRunner implements ToolRunner {
   }
 
   async getVersion(): Promise<string> {
-    const result = await this.spawner.spawn(this.command, ['--version'], { cwd: process.cwd(), timeoutMs: 5000 });
+    const env = await PathAugmenter.getAugmentedEnv();
+    const result = await this.spawner.spawn(this.command, ['--version'], { cwd: process.cwd(), timeoutMs: 5000, env });
     return result.exitCode === 0 ? (result.stdout || result.stderr).trim() : '';
   }
 
   protected async runCommand(ctx: ScanContext, args: string[]): Promise<RawToolOutput> {
+    const env = await PathAugmenter.getAugmentedEnv();
     const result = await this.spawner.spawn(this.command, args, {
       cwd: ctx.workspaceRoot,
-      timeoutMs: ctx.scanType === 'pre-commit' ? 25_000 : 120_000
+      timeoutMs: ctx.scanType === 'pre-commit' ? 25_000 : 120_000,
+      env
     });
 
     return {
