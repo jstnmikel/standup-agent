@@ -1,0 +1,40 @@
+{
+  "id": "79056234-4662-4ebf-82b0-b0f4bb97cd6f",
+  "timestamp": "2026-05-04T00:21:22.112Z",
+  "scanType": "manual",
+  "workspaceRoot": "C:\\Users\\justi\\OneDrive\\Documents\\Kiro\\Projects\\security-agent",
+  "scannerVersion": "0.1.1",
+  "ruleManifest": {
+    "lastUpdated": "2026-05-04T00:21:22.111Z",
+    "rulesets": []
+  },
+  "elapsedMs": 7376,
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "informational": 0,
+    "total": 0
+  },
+  "findings": [],
+  "suppressedFindings": [],
+  "staleRulesets": [],
+  "warnings": [
+    {
+      "code": "tool-unavailable-or-failed",
+      "toolId": "semgrep",
+      "message": "semgrep is not available on PATH"
+    },
+    {
+      "code": "tool-unavailable-or-failed",
+      "toolId": "pip-audit",
+      "message": "pip-audit is not available on PATH"
+    },
+    {
+      "code": "tool-unavailable-or-failed",
+      "toolId": "detect-secrets",
+      "message": "detect-secrets is not available on PATH"
+    }
+  ]
+}

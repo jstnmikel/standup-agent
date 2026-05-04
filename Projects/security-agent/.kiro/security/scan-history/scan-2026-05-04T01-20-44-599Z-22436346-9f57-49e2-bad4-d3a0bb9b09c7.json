@@ -1,0 +1,39 @@
+{
+  "id": "22436346-9f57-49e2-bad4-d3a0bb9b09c7",
+  "timestamp": "2026-05-04T01:20:44.599Z",
+  "scanType": "manual",
+  "workspaceRoot": "C:\\Users\\justi\\OneDrive\\Documents\\Kiro\\Projects\\security-agent",
+  "scannerVersion": "0.1.4",
+  "ruleManifest": {
+    "lastUpdated": "2026-05-04T01:20:44.598Z",
+    "rulesets": []
+  },
+  "elapsedMs": 11098,
+  "summary": {
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 0,
+    "informational": 0,
+    "total": 1
+  },
+  "findings": [
+    {
+      "toolId": "pip-audit",
+      "ruleId": "CVE-2026-3219",
+      "severity": "High",
+      "title": "Python vulnerability in pip",
+      "filePath": "requirements.txt",
+      "lineNumber": 1,
+      "standardIdentifier": "CVE-2026-3219",
+      "description": "pip handles concatenated tar and ZIP files as ZIP files regardless of filename or whether a file is both a tar and ZIP file. This behavior could result in confusing installation behavior, such as installing \"incorrect\" files according to the filename of the archive. New behavior only proceeds with installation if the file identifies uniquely as a ZIP or tar archive, not as both.",
+      "remediationGuidance": "Upgrade to one of: .",
+      "referenceUrl": "GHSA-58qw-9mgm-455v",
+      "category": "dependencies",
+      "id": "2d92999876c582d821c3b8f8"
+    }
+  ],
+  "suppressedFindings": [],
+  "staleRulesets": [],
+  "warnings": []
+}
