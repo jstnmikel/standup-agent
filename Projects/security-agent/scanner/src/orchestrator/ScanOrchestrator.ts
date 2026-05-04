@@ -185,6 +185,11 @@ export class ScanOrchestrator {
   }
 
   private exitCodeMayContainFindings(toolId: string): boolean {
-    return ['gitleaks', 'npm-audit'].includes(toolId);
+    // These tools return non-zero exit codes when they find issues — that is normal behavior, not an error
+    // semgrep: exits 2 when findings are present
+    // gitleaks: exits 1 when secrets are found
+    // npm-audit: exits 1 when vulnerabilities are found
+    // pip-audit: exits 1 when vulnerabilities are found
+    return ['gitleaks', 'npm-audit', 'semgrep', 'pip-audit'].includes(toolId);
   }
 }
