@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { promises as fs } from 'fs';
 import path from 'path';
 import type { AuditEvent, AuditEventInput } from '../models/AuditEvent';
+import { SCANNER_VERSION } from '../version';
 import { CredentialRedactor } from './CredentialRedactor';
 
 export interface VerifyResult {
@@ -24,7 +25,7 @@ export class AuditLogger {
 
   constructor(
     private readonly logPath: string,
-    private readonly scannerVersion = '0.1.0',
+    private readonly scannerVersion = SCANNER_VERSION,
     private readonly redactor = CredentialRedactor.instance
   ) {}
 

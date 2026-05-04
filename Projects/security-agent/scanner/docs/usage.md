@@ -10,6 +10,8 @@ Install missing tools and the Git pre-commit hook:
 dist\scanner.exe setup --workspace .
 ```
 
+For a double-click setup experience, run `Install-AgentSecurityScanner.cmd` from Explorer. It leaves the console window open until the developer presses Enter.
+
 Check tool availability without changing the machine:
 
 ```powershell

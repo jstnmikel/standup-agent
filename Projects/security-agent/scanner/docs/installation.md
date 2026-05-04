@@ -50,7 +50,7 @@ dist\scanner.exe --version
 Expected output for this build:
 
 ```text
-0.1.0
+0.1.1
 ```
 
 ## Install Scanner Tools
@@ -62,6 +62,20 @@ dist\scanner.exe setup --workspace .
 ```
 
 Setup installs the Git pre-commit hook and attempts to install missing scanner tools. Current installer strategy:
+
+For double-click installation, use:
+
+```text
+Install-AgentSecurityScanner.cmd
+```
+
+When distributed next to `dist\scanner.exe`, use:
+
+```text
+dist\Install-AgentSecurityScanner.cmd
+```
+
+The launcher opens a console window, shows setup progress, verifies whether the pre-commit hook exists, and waits for the developer to press Enter before closing.
 
 | Tool | Install strategy |
 |---|---|

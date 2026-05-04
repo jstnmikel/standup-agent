@@ -23,6 +23,7 @@ import {
 } from '../runners';
 import type { ScanContext } from './ScanContext';
 import { McpConfigScanner } from './McpConfigScanner';
+import { SCANNER_VERSION } from '../version';
 
 interface ToolRunResult {
   outputs: RawToolOutput[];
@@ -79,7 +80,7 @@ export class ScanOrchestrator {
     const report = this.reportBuilder.build(filtered, this.defaultManifest(), null, {
       scanType: ctx.scanType,
       workspaceRoot: ctx.workspaceRoot,
-      scannerVersion: '0.1.0',
+      scannerVersion: SCANNER_VERSION,
       elapsedMs: Date.now() - startedAt,
       warnings: toolRun.warnings
     });

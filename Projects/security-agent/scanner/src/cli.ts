@@ -7,13 +7,14 @@ import { SetupManager } from './setup/SetupManager';
 import { RuleUpdater } from './update/RuleUpdater';
 import { SelfUpdateManager } from './update/SelfUpdateManager';
 import { preCommitExitCode } from './utils/preCommitPolicy';
+import { SCANNER_VERSION } from './version';
 
 const program = new Command();
 
 program
   .name('scanner')
   .description('Agent Security Scanner - security scanning for AI agent and MCP developers')
-  .version('0.1.0');
+  .version(SCANNER_VERSION);
 
 program
   .command('scan')

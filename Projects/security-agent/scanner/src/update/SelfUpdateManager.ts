@@ -1,5 +1,6 @@
 import path from 'path';
 import { AuditLogger } from '../logging/AuditLogger';
+import { SCANNER_VERSION } from '../version';
 
 export interface UpdateCheckResult {
   updateAvailable: boolean;
@@ -11,8 +12,8 @@ export class SelfUpdateManager {
   checkForUpdate(): UpdateCheckResult {
     return {
       updateAvailable: false,
-      currentVersion: '0.1.0',
-      latestVersion: '0.1.0'
+      currentVersion: SCANNER_VERSION,
+      latestVersion: SCANNER_VERSION
     };
   }
 

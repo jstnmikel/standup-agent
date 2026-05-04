@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Improved Windows setup path discovery for Python user installs, WinGet package directories, and Node/npm.
+- Fixed packaged EXE child-process spawning during setup.
+- Rebuilt `dist/scanner.exe` with installer detection fixes.
+
 ## 0.1.0
 
 - Added CLI and Kiro/VS Code extension entry points.

@@ -2,7 +2,7 @@
   "name": "agent-security-scanner",
   "displayName": "Agent Security Scanner",
   "description": "Security scanner for AI agent and MCP developers — covers OWASP Top 10, CWE Top 25, OWASP LLM Top 10, OWASP Agentic Top 10, STRIDE, credential detection, MCP security, and AI transparency patterns.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "agent-security-scanner",
   "engines": {
     "vscode": "^1.85.0",
